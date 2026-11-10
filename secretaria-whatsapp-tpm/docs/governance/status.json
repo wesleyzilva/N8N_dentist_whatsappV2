@@ -1,0 +1,241 @@
+{
+  "updated": "2026-10-22",
+  "product": "Secretária WhatsApp — harmonização orofacial (Pato Branco 46 / São Carlos 16)",
+  "current_phase": 1,
+  "current_step": "E3",
+  "how_to_read": "Este arquivo é o registro do TPM (declarado). O TPM Console cruza cada item com evidência automática (pytest, cenários, probes). Se o declarado diz 'feito' e a evidência está vermelha, o Console mostra divergência.",
+  "phases": [
+    {
+      "id": 0,
+      "name": "Governança",
+      "status": "done",
+      "problems": [],
+      "gate": "TPM abre sprint P* sem consultar docs órfãos",
+      "automated": ["docs:canonical", "mcp:schemas", "config:json"],
+      "manual": [
+        {"label": "Mapa canônico, RACI, RAID, skills e rules Cursor", "done": true},
+        {"label": "Contratos MCP em mcp/schemas", "done": true}
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Canal e voz",
+      "status": "in_progress",
+      "problems": ["P1", "P2", "P10"],
+      "gate": "Round-trip webhook → /turn → texto humanizado, sem fatos inventados",
+      "automated": ["pytest", "scenarios:phase1", "workflows:audit"],
+      "manual": [
+        {"label": "POST /turn devolve contrato canônico", "done": true},
+        {"label": "Workflow importado e ativo no n8n", "done": false},
+        {"label": "POST no webhook n8n devolve reply_text do /turn", "done": false},
+        {"label": "Provedor WhatsApp definido: Meta WhatsApp Cloud API (decisão do Wesley)", "done": true}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Unidade e presença",
+      "status": "in_progress",
+      "problems": ["P3", "P4"],
+      "gate": "46, 16, DDD outro e texto vs DDD; 'a dra está em X?' nunca sem ferramenta",
+      "automated": ["scenarios:phase2", "config:json"],
+      "manual": [
+        {"label": "Calendário/bloco de viagem por unidade (hoje as duas unidades apontam para o mesmo calendar_id)", "done": false},
+        {"label": "Dona valida a premissa: dra alterna entre as cidades e isso está no Google Calendar", "done": false}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Agenda grounded",
+      "status": "blocked",
+      "problems": ["P2", "P5"],
+      "gate": "Se o calendário falhar: pede espera ou escala; zero horários sintéticos",
+      "automated": ["scenarios:phase3", "integration:google-calendar"],
+      "manual": [
+        {"label": "OAuth Google Calendar autorizado e testado", "done": false},
+        {"label": "Cliente real de freebusy em app/infrastructure/mcp (hoje só Missing/Error/Fixture)", "done": false}
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Mutação de agenda",
+      "status": "planned",
+      "problems": ["P6"],
+      "gate": "Nenhuma mutação sem CONFIRM explícito no turno; rollback documentado",
+      "automated": ["workflows:audit"],
+      "manual": [
+        {"label": "Remover lógica de reserva do canvas n8n (hoje há nós Google Calendar Agendar + regras em Code node)", "done": false}
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Triagem e humana",
+      "status": "planned",
+      "problems": ["P7", "P8"],
+      "gate": "Caso clínico não recebe conselho; handoff com resumo factual",
+      "automated": ["scenarios:phase5"],
+      "manual": [
+        {"label": "Canal interno de handoff (WhatsApp da equipe / fila)", "done": false}
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Compliance e produção",
+      "status": "planned",
+      "problems": ["P9"],
+      "gate": "Opt-out, auditoria de decisão, backup do n8n; Security assina",
+      "automated": ["scenarios:phase6", "secrets:scan"],
+      "manual": [
+        {"label": "Persistência do opt-out (hoje só em memória com TTL)", "done": false},
+        {"label": "Log de decisão auditável", "done": false}
+      ]
+    }
+  ],
+  "problems": [
+    {"id": "P1", "title": "Atendimento humanizado no Zap", "runtime": "SecretaryVoice", "source": "config/voice.json", "phase": 1, "declared": "in_progress", "owner": "Voice"},
+    {"id": "P2", "title": "Não alucinar", "runtime": "GuardrailGrounding", "source": "MCP guardrails", "phase": 1, "declared": "in_progress", "owner": "Dev + QA"},
+    {"id": "P3", "title": "Entender unidade (46 vs 16)", "runtime": "Location", "source": "MCP clinic-locations", "phase": 2, "declared": "in_progress", "owner": "Dev"},
+    {"id": "P4", "title": "Onde a dra está agora", "runtime": "Presence", "source": "Calendário + clinic.json", "phase": 2, "declared": "blocked", "owner": "Architect"},
+    {"id": "P5", "title": "Disponibilidade real", "runtime": "Agenda", "source": "MCP google-calendar", "phase": 3, "declared": "blocked", "owner": "Dev + DevOps"},
+    {"id": "P6", "title": "Confirmar / reagendar / cancelar", "runtime": "Appointments", "source": "Calendar write + n8n", "phase": 4, "declared": "planned", "owner": "Dev"},
+    {"id": "P7", "title": "Dúvida vs emergência vs clínico", "runtime": "Triage", "source": "Guardrails clínicos", "phase": 5, "declared": "in_progress", "owner": "Dev + Voice"},
+    {"id": "P8", "title": "Escalar para humana", "runtime": "Escalation", "source": "WhatsApp interno / fila", "phase": 5, "declared": "in_progress", "owner": "Dev + DevOps"},
+    {"id": "P9", "title": "LGPD, opt-out, auditoria", "runtime": "Compliance", "source": "logs + blacklist", "phase": 6, "declared": "in_progress", "owner": "Security"},
+    {"id": "P10", "title": "Orquestração confiável", "runtime": "Orchestrator (n8n)", "source": "MCP n8n-ops", "phase": 1, "declared": "in_progress", "owner": "DevOps"}
+  ],
+  "test_map": {
+    "tests/test_classify_intent.py": ["P1", "P7"],
+    "tests/test_grounding.py": ["P2"],
+    "tests/test_guardrails_config.py": ["P2"],
+    "tests/test_http_turn.py": ["P10", "P1"],
+    "tests/test_location_resolver.py": ["P3"],
+    "tests/test_n8n_grounded_reply.py": ["P10", "P2"],
+    "tests/test_project_structure.py": [],
+    "tests/test_scenarios.py": [],
+    "tests/test_secretary_voice.py": ["P1", "P2"],
+    "tests/test_turn.py": ["P2", "P4", "P5", "P7"]
+  },
+  "execution_steps": [
+    {
+      "id": "E0", "name": "Ambiente e dependências", "status": "done",
+      "goal": "Máquina do desenvolvedor pronta para rodar testes e o Console.",
+      "checks": ["env:vars", "structure:hygiene", "docs:canonical"],
+      "how": ["cp .env.example .env", "pip install -r requirements-dev.txt", "npm run validate"],
+      "manual": [
+        {"label": "Node 20+ e Python 3.10+ instalados", "done": true},
+        {"label": ".env criado a partir do .env.example (sem commitar)", "done": true}
+      ]
+    },
+    {
+      "id": "E1", "name": "Código e testes verdes", "status": "done",
+      "goal": "Regras de domínio, grounding e voz provadas sem Docker.",
+      "checks": ["pytest", "scenarios", "corpus", "config:json", "mcp:schemas", "secrets:scan"],
+      "how": ["pytest", "python -m scripts.run_scenarios"],
+      "manual": [
+        {"label": "15 cenários anti-alucinação passam", "done": true}
+      ]
+    },
+    {
+      "id": "E2", "name": "Serviço Python e simulador", "status": "done",
+      "goal": "POST /turn no ar e simulável pelo Console (calendário vazio, erro ou fixture).",
+      "checks": ["integration:python-service"],
+      "how": ["npm run console  # botão Iniciar serviço", "python -m app.interfaces.http.intent_service"],
+      "manual": [
+        {"label": "POST /turn devolve o contrato canônico", "done": true},
+        {"label": "Simulador do Console cobre os três modos de calendário", "done": true}
+      ]
+    },
+    {
+      "id": "E3", "name": "Docker: stack local", "status": "next",
+      "goal": "postgres + n8n + serviço Python subindo com um comando, sem segredo no git. O WhatsApp é a Meta Cloud API (SaaS, sem container).",
+      "checks": ["compose:valid", "integration:n8n"],
+      "how": ["docker compose up -d", "docker compose ps"],
+      "manual": [
+        {"label": "Decidir compose único: promover infra/docker/compose.target.yml a docker-compose.yml (A8)", "done": false},
+        {"label": ".env com POSTGRES_PASSWORD e N8N_ENCRYPTION_KEY novos (A3)", "done": false},
+        {"label": "Imagem do serviço Python (infra/docker/Dockerfile.intent) construída e healthz verde", "done": false},
+        {"label": "Containers saudáveis: docker compose ps", "done": false}
+      ]
+    },
+    {
+      "id": "E4", "name": "Banco de dados", "status": "planned",
+      "goal": "Banco secretaria com estado mínimo de conversa e deduplicação de webhook (sem agenda, que é do Google Calendar).",
+      "checks": [],
+      "how": ["docker compose exec -T postgres psql -U n8n -d postgres < infra/db/migrations/001_secretaria_fase1.sql"],
+      "manual": [
+        {"label": "Confirmar o modelo de dados mínimo (A9)", "done": false},
+        {"label": "Migração 001 aplicada e reaplicável sem erro", "done": false},
+        {"label": "Credencial Postgres criada no n8n (host postgres, database secretaria)", "done": false}
+      ]
+    },
+    {
+      "id": "E5", "name": "Workflow no n8n", "status": "planned",
+      "goal": "Webhook → POST /turn → reply_text, com os mesmos 15 cenários passando pelo n8n.",
+      "checks": ["workflows:audit", "integration:n8n-webhook"],
+      "how": ["n8n > Import from file > workflows/intent_workflow.json", "python -m scripts.run_scenarios --url http://localhost:5678/webhook/intent-webhook"],
+      "manual": [
+        {"label": "Workflow importado e ativo; URL do nó HTTP usa o nome do serviço (intent-service:8001)", "done": false},
+        {"label": "Cenários contra o n8n verdes e evidência no VALIDATION_LOG", "done": false},
+        {"label": "Decisão A2 sobre a lógica de reserva no canvas", "done": false}
+      ]
+    },
+    {
+      "id": "E6", "name": "WhatsApp (Meta Cloud API)", "status": "planned",
+      "goal": "Mensagem real entra pelo webhook da Meta, passa pelo n8n e /turn e volta como texto da secretária (send_payload).",
+      "checks": ["integration:whatsapp-meta"],
+      "how": ["Meta for Developers > criar app > WhatsApp > número de teste", "Webhook: URL pública do n8n (Webhook com Raw Body) + META_VERIFY_TOKEN, assinar o campo messages", "n8n: POST /meta/webhook no serviço Python e enviar cada replies[].send_payload para graph.facebook.com com META_ACCESS_TOKEN", "Testar local: npm run console > Integrações (GET verify) e Simulador"],
+      "manual": [
+        {"label": "Provedor definido: Meta Cloud API", "done": true},
+        {"label": "META_VERIFY_TOKEN, META_APP_SECRET, META_ACCESS_TOKEN e META_PHONE_NUMBER_ID no .env (nunca no git)", "done": false},
+        {"label": "Webhook verificado pela Meta (GET hub.challenge)", "done": false},
+        {"label": "Round-trip real validado com número de teste", "done": false}
+      ]
+    },
+    {
+      "id": "E7", "name": "Unidade e presença (Fase 2)", "status": "planned",
+      "goal": "Calendário por unidade e premissa da dona validada.",
+      "checks": ["scenarios:phase2"],
+      "how": ["Preencher calendar_id e endereço de cada unidade em config/clinic.json (A4)"],
+      "manual": [
+        {"label": "calendar_id distinto por unidade", "done": false},
+        {"label": "Dona confirma que a dra alterna entre as cidades no Google Calendar", "done": false}
+      ]
+    },
+    {
+      "id": "E8", "name": "Google Calendar (Fase 3)", "status": "planned",
+      "goal": "Disponibilidade e presença reais atrás do protocolo CalendarGateway.",
+      "checks": ["scenarios:phase3", "integration:google-calendar"],
+      "how": ["Implementar GoogleCalendarGateway (A5)"],
+      "manual": [
+        {"label": "OAuth autorizado e testado", "done": false},
+        {"label": "Calendário falhando continua degradando para pergunta ou espera", "done": false}
+      ]
+    }
+  ],
+  "next_actions": [
+    {"id": "A1", "priority": "alta", "problem": "P10", "phase": 1, "owner": "DevOps", "title": "Subir stack (docker compose up), importar workflows/intent_workflow.json e validar o webhook no Console (aba Integrações)"},
+    {"id": "A2", "priority": "alta", "problem": "P6", "phase": 4, "owner": "Architect", "title": "Decidir: remover do canvas n8n a triagem/slots/reserva (Code node 'Triagem e Horários Próximos') e mover para app/ conforme regra n8n-workflows"},
+    {"id": "A3", "priority": "alta", "problem": "P9", "phase": 6, "owner": "Security", "title": "Rotacionar a chave da Evolution API que esteve no git (serviço removido; a chave antiga continua no histórico) e exigir N8N_ENCRYPTION_KEY no .env (hoje o compose tem valor padrão)"},
+    {"id": "A4", "priority": "media", "problem": "P4", "phase": 2, "owner": "TPM", "title": "Obter calendar_id distinto por unidade (hoje Pato Branco e São Carlos usam o mesmo) e endereço real das unidades"},
+    {"id": "A5", "priority": "media", "problem": "P5", "phase": 3, "owner": "Dev", "title": "Implementar GoogleCalendarGateway real (freebusy) atrás do protocolo CalendarGateway; o fluxo OAuth antigo está no git (commit a0048aa, legacy/auth_e_agenda.py)"},
+    {"id": "A6", "priority": "media", "problem": "P8", "phase": 5, "owner": "Dev", "title": "Separar motivos de escalonamento (clinical, human_requested, complaint); hoje pedido de humana sai como 'clinical'"},
+    {"id": "A7", "priority": "baixa", "problem": "P7", "phase": 5, "owner": "Dev", "title": "Palavra 'dor' casa por substring (ex.: 'adorei'); trocar por limite de palavra mantendo viés seguro"},
+    {"id": "A8", "priority": "alta", "problem": "P10", "phase": 1, "owner": "DevOps", "title": "Unificar o compose: promover infra/docker/compose.target.yml (postgres com healthcheck, intent-service, n8n sem segredo fixo) (sem Evolution: o WhatsApp é a Meta Cloud API)"},
+    {"id": "A9", "priority": "media", "problem": "P9", "phase": 1, "owner": "Architect", "title": "Confirmar o modelo de dados: só conversation_state e processed_messages no banco secretaria; o schema 'clinica' (pacientes/agendamentos) foi removido por duplicar a agenda do Google Calendar"}
+  ],
+  "inventory": [
+    {"path": "app/", "kind": "canônico", "decision": "manter", "note": "Domínio, gateways de calendário, HTTP /turn e espelho do nó n8n (interfaces/n8n). Fonte de regras."},
+    {"path": "config/", "kind": "canônico", "decision": "manter", "note": "clinic, guardrails, voice, session."},
+    {"path": "tests/", "kind": "canônico", "decision": "manter", "note": "pytest + tests/scenarios/conversations.json (suíte de conversas)."},
+    {"path": "scripts/run_scenarios.py", "kind": "canônico", "decision": "manter", "note": "Executa a suíte em processo ou contra HTTP (/simulate/turn, n8n)."},
+    {"path": "console/", "kind": "canônico", "decision": "manter", "note": "TPM Console local (Node, sem dependências)."},
+    {"path": "mcp/", "kind": "canônico", "decision": "manter", "note": "Contratos para Cursor e runtime."},
+    {"path": "workflows/intent_workflow.json", "kind": "orquestração", "decision": "migrar", "note": "Webhook→/turn ok; Code node com regras de negócio e reserva viola a regra do n8n (A2)."},
+    {"path": "docker-compose.yml", "kind": "infra", "decision": "substituir", "note": "postgres + n8n. Funciona, mas tem senha e chave padrão; será substituído pelo compose alvo (A8)."},
+    {"path": "infra/docker/compose.target.yml", "kind": "infra", "decision": "promover", "note": "Compose alvo (postgres, intent-service, n8n) sem segredo fixo. O WhatsApp é a Meta Cloud API (sem container)."},
+    {"path": "infra/docker/Dockerfile.intent", "kind": "infra", "decision": "manter", "note": "Imagem do serviço Python (python -m app.interfaces.http.intent_service)."},
+    {"path": "infra/db/migrations/", "kind": "infra", "decision": "manter", "note": "Banco secretaria: conversation_state e processed_messages."},
+    {"path": "infra/LOCAL_TO_CLOUD.md", "kind": "infra", "decision": "manter", "note": "Passo a passo de migração e checklist de nuvem."},
+    {"path": "docs/", "kind": "canônico", "decision": "manter", "note": "canonical/ (mapa), governance/ (status, RAID, RACI, gates, layout), sprints/. Índice em docs/README.md."},
+    {"path": "removidos (commit a0048aa)", "kind": "arquivo", "decision": "removido", "note": "legacy/, docs/archive/ (VIPpocket), docker/n8n/calendar.json (agente Gemini), schema clinica, certs/, boilerplate de template. Recuperáveis pelo git."}
+  ]
+}

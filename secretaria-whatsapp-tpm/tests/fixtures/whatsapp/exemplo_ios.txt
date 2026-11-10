@@ -1,0 +1,5 @@
+[03/10/2026, 15:40:01] Carlos Inventado: Boa tarde, vocês atendem em São Carlos?
+[03/10/2026, 15:41:22] Secretária Clínica: Boa tarde, Carlos! Atendemos sim. Quer que eu veja um horário pra você?
+[03/10/2026, 15:42:05] Carlos Inventado: quero sim
+mas só posso depois das 18h
+[03/10/2026, 15:45:10] Secretária Clínica: Combinado, vou verificar a agenda e te retorno 😉

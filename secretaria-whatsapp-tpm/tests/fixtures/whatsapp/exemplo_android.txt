@@ -1,0 +1,14 @@
+10/09/2026 09:12 - As mensagens e as ligações são protegidas com a criptografia de ponta a ponta.
+10/09/2026 09:12 - Joana Fictícia: Oi, bom dia! Meu nome é Joana Fictícia
+10/09/2026 09:13 - Joana Fictícia: queria saber se tem horário essa semana
+10/09/2026 09:20 - Secretária Clínica: Bom dia, Joana! Tudo bem? Tenho quinta às 14h ou sexta 10:30 em Pato Branco 😊
+10/09/2026 09:25 - Joana Fictícia: quanto custa o botox?
+10/09/2026 09:31 - Secretária Clínica: O valor da toxina é R$ 1.200,00 e dá pra parcelar em 3x
+10/09/2026 09:32 - Joana Fictícia: ok, meu cpf é 123.456.789-09 e email joana.ficticia@example.com
+meu cel 46 99911-2233
+10/09/2026 09:35 - Secretária Clínica: Anotado! Qualquer coisa me chama aqui
+11/09/2026 18:02 - Joana Fictícia: estou com muita dor e inchaço depois do procedimento
+11/09/2026 18:05 - Secretária Clínica: Fica tranquila, é normal. Coloca gelo e toma dipirona
+12/09/2026 08:00 - Joana Fictícia: <Mídia oculta>
+12/09/2026 08:01 - Joana Fictícia: obrigada!!
+12/09/2026 08:03 - Secretária Clínica: Imagina, Joana! Estamos sempre por aqui 💜

@@ -1,0 +1,27 @@
+# segredos e credenciais locais
+.env
+token.json
+credentials.json
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+
+# Node / TPM Console
+node_modules/
+console/.cache/
+
+# artefatos de simulação
+simulacao_resultado*.txt
+simulacao_resultado*.jsonl
+logs/
+
+# scratch local
+testar_gemini.py
+
+# dados de conversa (LGPD) — nunca versionar
+data/*
+!data/LEIA-ME.md
+*.zip

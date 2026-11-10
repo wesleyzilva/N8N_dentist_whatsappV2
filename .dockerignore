@@ -1,0 +1,25 @@
+# Nunca copiar segredos nem lixo para dentro da imagem
+.env
+.env.*
+!.env.example
+.git
+.gitignore
+.cursor
+__pycache__
+*.pyc
+.pytest_cache
+.venv
+
+# Não é necessário em runtime (o n8n lê ./workflows por volume)
+tests
+docs
+workflows
+scripts
+infra
+console
+node_modules
+package.json
+*.md
+*.zip
+docker-compose*.yml
+Dockerfile*

@@ -1,0 +1,30 @@
+{
+  "templates": {
+    "CONFIRM": "Perfeito, anotei a confirmação do seu atendimento. Se precisar mudar, é só me chamar.",
+    "RESCHEDULE": "Claro, vamos remarcar. Me conta um período que funciona pra você que eu confirmo na agenda da unidade.",
+    "CANCEL": "Tudo bem, vou registrar o cancelamento. Quando quiser remarcar, estou por aqui.",
+    "QUESTION": "Posso te ajudar com agendamento, confirmação e horários da harmonização orofacial. O que você precisa saber?",
+    "UNKNOWN": "Olá! Posso te ajudar com o atendimento de harmonização orofacial. Se quiser, me diz se é para confirmar, reagendar, cancelar ou ver horário — e em qual cidade (Pato Branco ou São Carlos).",
+    "ask_unit": "Você prefere Pato Branco ou São Carlos?",
+    "ask_unit_hypothesis": "Pelo seu número, imagino {city}. É nessa unidade mesmo?",
+    "ask_availability": "Vou olhar a agenda da unidade e já te retorno com horários reais, combinado?",
+    "ask_presence": "Deixa eu confirmar na agenda em qual cidade a dra está agora — te falo com certeza, sem chute.",
+    "clinical_escalate": "Sinto muito que você esteja passando por isso. Vou encaminhar agora para a equipe, que é o caminho mais seguro.",
+    "presence_known": "Pela agenda, a dra está em {city} agora.",
+    "tenho_horarios": "Na agenda da unidade encontrei: {slots}.",
+    "unit_confirmed": "Combinado, {city}. Posso te ajudar a confirmar, remarcar, cancelar ou ver horário.",
+    "opt_out": "Tudo bem, não te envio mais mensagens. Se mudar de ideia, é só chamar.",
+    "GREETING": "Olá! Aqui é a assistente virtual da dra., de harmonização orofacial. Posso te ajudar a confirmar, reagendar, cancelar ou ver horário. O que você precisa?",
+    "THANKS": "Por nada! Qualquer coisa, é só chamar.",
+    "ACK": "Certo! Posso te ajudar com mais alguma coisa?",
+    "BOT_IDENTITY": "Sou a assistente virtual do consultório da dra. Cuido de agendamento, confirmação e horários. Se preferir falar com a equipe, é só pedir.",
+    "human_requested": "Claro! Vou chamar alguém da equipe para continuar com você por aqui.",
+    "complaint": "Sinto muito pela sua experiência. Vou encaminhar agora para a equipe resolver com atenção.",
+    "fallback_offer": "Desculpa, essa eu não consigo responder com segurança por aqui. Posso verificar se a dra. consegue te atender agora pelo WhatsApp ou, se preferir, você deixa seu recado e ela retorna o contato assim que puder. O que prefere?",
+    "fallback_media": "Desculpa, por aqui eu só consigo ler mensagens de texto. Posso verificar se a dra. consegue te atender agora pelo WhatsApp ou, se preferir, você deixa seu recado por escrito e ela retorna o contato assim que puder. O que prefere?",
+    "fallback_check_dra": "Certo! Vou verificar com a equipe se a dra. consegue te atender por aqui agora e já te aviso.",
+    "fallback_ask_message": "Combinado. Pode escrever seu recado que eu passo para a dra. Ela retorna o contato assim que puder.",
+    "fallback_message_saved": "Recado anotado! Passei para a dra., que retorna o contato assim que puder. Obrigada por aguardar.",
+    "fallback_dismiss": "Tudo bem! Se precisar de algo, é só chamar."
+  }
+}

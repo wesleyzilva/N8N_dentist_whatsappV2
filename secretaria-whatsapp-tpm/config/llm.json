@@ -1,0 +1,30 @@
+{
+  "description": "Camada LLM + RAG. mode: off (só templates) | shadow (LLM roda, paciente recebe o template, comparação vai para logs/shadow.jsonl) | on (paciente recebe o texto do LLM se o verificador aprovar; senão o template). Sobrescreva com a variável LLM_MODE.",
+  "mode": "off",
+  "provider": "gemini",
+  "model": "gemini-flash-latest",
+  "embedding_model": "gemini-embedding-001",
+  "temperature": 0.3,
+  "max_output_chars": 320,
+  "timeout_seconds": 8,
+  "rag": {
+    "index_path": "data/rag/index.json",
+    "top_k": 4,
+    "min_score": 0.55
+  },
+  "rewrite_intents": [
+    "GREETING", "THANKS", "ACK", "BOT_IDENTITY", "QUESTION", "UNKNOWN",
+    "CONFIRM", "RESCHEDULE", "CANCEL", "AVAILABILITY", "LOCATION", "DISMISS"
+  ],
+  "never_rewrite": ["OPT_OUT", "ESCALATE", "LEAVE_MESSAGE", "CHECK_DRA"],
+  "shadow_log_path": "logs/shadow.jsonl",
+  "system_rules": [
+    "Você é a secretária virtual de um consultório de harmonização orofacial (não é dentista geral), com unidades em Pato Branco e São Carlos.",
+    "Sua tarefa é REESCREVER a RESPOSTA-BASE no tom das respostas reais da clínica (exemplos), mantendo exatamente o mesmo sentido.",
+    "Proibido acrescentar qualquer fato que não esteja na RESPOSTA-BASE: horário, data, dia da semana, preço, forma de pagamento, procedimento, endereço, cidade, telefone ou promessa de agendamento.",
+    "Proibido dar orientação clínica ou dizer que algo é normal.",
+    "Se a RESPOSTA-BASE faz uma pergunta, a sua resposta também faz a mesma pergunta.",
+    "Nos exemplos, {HORARIO}, {PRECO}, {DATA}, {DIA}, {CIDADE} e {PROCEDIMENTO} são dados ocultos: nunca escreva esses marcadores nem invente valores para eles.",
+    "Responda só com o texto da mensagem, em português do Brasil, curto, sem markdown."
+  ]
+}
